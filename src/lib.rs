@@ -80,6 +80,25 @@ macro_rules! GENERATE_VEC {
                         }
                         self
                     }
+
+                    /// Does scalar-wise division
+                    #[inline(always)]
+                    pub fn div_scalar(mut self, scalar: T) -> Self {
+                        for cx in 0..$n {
+                            self[cx] = self[cx] / scalar;
+                        }
+                        self
+                    }
+
+                    /// Does scalar-wise multiplication
+                    #[inline(always)]
+                    pub fn mul_scalar(mut self, scalar: T) -> Self {
+                        for cx in 0..$n {
+                            self[cx] = self[cx] * scalar;
+                        }
+                        self
+                    }
+
                 }// impl end
             }
         )*
@@ -104,7 +123,7 @@ GENERATE_VEC!(2, 3, 4);
 mod tests {
     use super::*;
     #[test]
-    fn test_vectors_create() {
+    fn test_vectors_basic() {
         let data_2f = [1.0, 2.0];
         let data_3f = [1.0, 2.0, 3.0];
         let data_4f = [1f32, 2f32, 3f32, 4f32];
@@ -112,6 +131,8 @@ mod tests {
         let _vec2f = Vector2::from(data_2f);
         let _vec3f = Vector3::from(data_3f);
         let _vec4f = Vector4::from(data_4f);
+
+        assert_eq!(_vec2f, _vec2f);
     }
 
     #[test]
@@ -123,5 +144,20 @@ mod tests {
         assert_eq!(v1.add(v2), ans);
         assert_eq!(ans.sub(v1), v2);
         assert_eq!(ans.sub(v2), v1);
+    }
+
+    #[test]
+    fn test_vectors_mul_div_scalar() {
+        let scalar = 4f32;
+        let v1 = Vector4::from([0f32, 1f32, 3f32, 12f32]);
+        let ans_mul = v1.mul_scalar(scalar);
+        let ans_div = v1.div_scalar(scalar);
+
+        assert_eq!(ans_mul, Vector4::from([0f32, 4f32, 12f32, 48f32]));
+        assert_eq!(ans_div, Vector4::from([0f32, 0.25f32, 0.75f32, 3f32]));
+
+        assert_eq!(v1, ans_mul.div_scalar(scalar));
+        assert_eq!(v1, ans_div.mul_scalar(scalar));
+        assert_eq!(ans_mul, v1.add(v1).add(v1).add(v1));
     }
 }
