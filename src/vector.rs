@@ -12,6 +12,25 @@ macro_rules! GENERATE_VEC {
             // Generate the struct using paste
             paste::item! {
 
+                /// Generates a vector with random elements.
+                /// Since T is a float, it will generate a value [0,1)
+                #[cfg(feature = "rand")]
+                #[inline(always)]
+                pub fn [<generate_rand_vector $n>]<T>() -> [<Vector $n>]<T>
+                where
+                    T: Element,
+                    rand::distributions::Standard: rand::distributions::Distribution<T>,
+                {
+                    use std::mem::MaybeUninit;
+
+                    use rand::Rng;
+
+                    [<Vector $n>]::from(
+                        unsafe { MaybeUninit::<[T; $n]>::uninit().assume_init() }
+                            .map(|_| unsafe { RNG_GEN.gen::<T>() }),
+                    )
+                }
+
                 #[derive(Debug, Clone, Copy)]
                 pub struct [<Vector $n>]<T:Element>(pub [T; $n]);
 

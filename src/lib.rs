@@ -7,7 +7,7 @@ pub trait Element:
 impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy> Element for T {}
 
 #[cfg(test)]
-mod tests {
+mod test_vector {
     use std::f32::consts::PI;
 
     use approx::assert_relative_eq;
