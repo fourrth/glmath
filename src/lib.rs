@@ -1,4 +1,4 @@
-use core::ops::{Index, IndexMut};
+pub mod vector;
 
 pub trait Element:
     core::fmt::Debug + std::iter::Sum + num::Float + PartialOrd + Clone + Copy
@@ -6,162 +6,13 @@ pub trait Element:
 }
 impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy> Element for T {}
 
-macro_rules! GENERATE_VEC {
-    ($($n:expr),*) => {
-        $(
-            // Generate the struct using paste
-            paste::item! {
-                #[derive(Debug, Clone, Copy)]
-                pub struct [<Vector $n>]<T:Element>(pub [T; $n]);
-
-                impl<T:Element> From<[T;$n]> for [<Vector $n>]<T> {
-                    #[inline(always)]
-                    fn from(value: [T;$n]) -> Self {
-                        Self(value)
-                    }
-                }
-
-                impl<T:Element> From<&[T;$n]> for [<Vector $n>]<T> {
-                    #[inline(always)]
-                    fn from(value: &[T;$n]) -> Self {
-                        Self(value.clone())
-                    }
-                }
-
-                impl<T:Element> Index<usize> for [<Vector $n>]<T> {
-                    type Output = T;
-                    #[inline(always)]
-                    fn index(&self, index: usize) -> &Self::Output {
-                        self.0.index(index)
-                    }
-                }
-
-                impl<T:Element> IndexMut<usize> for [<Vector $n>]<T> {
-                    #[inline(always)]
-                    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-                        self.0.index_mut(index)
-                    }
-                }
-
-                impl<T: Element> IntoIterator for [<Vector $n>]<T> {
-                    type Item = T;
-                    type IntoIter = core::array::IntoIter<T, $n>;
-                    #[inline(always)]
-                    fn into_iter(self) -> Self::IntoIter {
-                        self.0.into_iter()
-                    }
-                }
-
-                impl<T: Element> PartialEq for [<Vector $n>]<T> {
-                    fn eq(&self, other: &Self) -> bool {
-                        for (ca, cb) in self.into_iter().zip(other.into_iter()) {
-                            if (ca - cb).abs() > T::epsilon() // faster to just check one but idc
-                            || (cb - ca).abs() > T::epsilon()
-                            {
-                                return false;
-                            }
-                        }
-                        true
-                    }
-                }
-
-                impl<T: Element> [<Vector $n>]<T> {
-                    /// Does element-wise addition
-                    #[inline(always)]
-                    pub fn add(mut self, addend: Self) -> Self {
-                        for cx in 0..$n {
-                            self[cx] = self[cx] + addend[cx];
-                        }
-                        self
-                    }
-
-                    /// Does element-wise subtraction
-                    #[inline(always)]
-                    pub fn sub(mut self, subtrahend: Self) -> Self {
-                        for cx in 0..$n {
-                            self[cx] = self[cx] - subtrahend[cx];
-                        }
-                        self
-                    }
-
-                    /// Does scalar-wise division
-                    #[inline(always)]
-                    pub fn div_scalar(mut self, scalar: T) -> Self {
-                        for cx in 0..$n {
-                            self[cx] = self[cx] / scalar;
-                        }
-                        self
-                    }
-
-                    /// Does scalar-wise multiplication
-                    #[inline(always)]
-                    pub fn mul_scalar(mut self, scalar: T) -> Self {
-                        for cx in 0..$n {
-                            self[cx] = self[cx] * scalar;
-                        }
-                        self
-                    }
-
-                    /// Does inner product (aka dot product)
-                    #[inline(always)]
-                    pub fn mul_inner(self, other: Self) -> T {
-                        self.into_iter()
-                        .zip(other.into_iter())
-                        .map(|(ca, cb)| ca * cb)
-                        .sum()
-                    }
-
-                    /// Gets the length of the Vector
-                    #[inline(always)]
-                    pub fn len(self) -> T {
-                        self.mul_inner(self).sqrt()
-                    }
-
-                    /// Gets the norm of the Vector
-                    #[inline(always)]
-                    pub fn norm(self) -> Self {
-                        self.div_scalar(self.len())
-                    }
-
-                    /// Gets the distance between both Vectors
-                    #[inline(always)]
-                    pub fn dist(self, other: Self) -> T {
-                        other.sub(self).len()
-                    }
-
-                    /// Gets the angle between two vectors
-                    #[inline(always)]
-                    pub fn angle(self, other: Self) -> T {
-                        let a = self.mul_inner(other);
-                        let b = self.len() * other.len();
-                        num::clamp(a/b, -T::one(), T::one()).acos()
-                    }
-                }// impl end
-            }
-        )*
-    };
-}
-
-impl<T: Element> Vector3<T> {
-    /// Does cross product
-    #[inline(always)]
-    pub fn mul_cross(self, crossed: Self) -> Self {
-        Self([
-            self[1] * crossed[2] - self[2] * crossed[1],
-            self[2] * crossed[0] - self[0] * crossed[2],
-            self[0] * crossed[1] - self[1] * crossed[0],
-        ])
-    }
-}
-
-GENERATE_VEC!(2, 3, 4);
-
 #[cfg(test)]
 mod tests {
     use std::f32::consts::PI;
 
     use approx::assert_relative_eq;
 
+    use super::vector::*;
     use super::*;
     #[test]
     fn test_vectors_basic() {
