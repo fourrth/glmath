@@ -1,7 +1,10 @@
 use core::ops::{Index, IndexMut};
 
-pub trait Element: core::fmt::Debug + std::iter::Sum + num::Float + Clone + Copy {}
-impl<T: core::fmt::Debug + num::Float + std::iter::Sum + Clone + Copy> Element for T {}
+pub trait Element:
+    core::fmt::Debug + std::iter::Sum + num::Float + PartialOrd + Clone + Copy
+{
+}
+impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy> Element for T {}
 
 macro_rules! GENERATE_VEC {
     ($($n:expr),*) => {
@@ -120,6 +123,19 @@ macro_rules! GENERATE_VEC {
                         self.div_scalar(self.len())
                     }
 
+                    /// Gets the distance between both Vectors
+                    #[inline(always)]
+                    pub fn dist(self, other: Self) -> T {
+                        other.sub(self).len()
+                    }
+
+                    /// Gets the angle between two vectors
+                    #[inline(always)]
+                    pub fn angle(self, other: Self) -> T {
+                        let a = self.mul_inner(other);
+                        let b = self.len() * other.len();
+                        num::clamp(a/b, -T::one(), T::one()).acos()
+                    }
                 }// impl end
             }
         )*
@@ -212,4 +228,23 @@ mod tests {
         assert_relative_eq!(v1.norm().mul_inner(v1.mul_scalar(5f32).norm()), 1f32);
     }
 
+    #[test]
+    fn test_vectors_dist_angle() {
+        let theta = PI / 4f32;
+        let opposite_theta = theta + PI;
+        let perp_theta = theta + PI / 2f32;
+
+        let regular = Vector2::from([theta.cos(), theta.sin()]);
+        let opposite = Vector2::from([opposite_theta.cos(), opposite_theta.sin()]);
+        let perp = Vector2::from([perp_theta.cos(), perp_theta.sin()]);
+
+        assert_relative_eq!(regular.dist(regular), 0f32);
+        assert_relative_eq!(regular.angle(regular), 0f32);
+
+        assert_relative_eq!(regular.dist(opposite), regular.len() * 2f32);
+        assert_relative_eq!(regular.angle(opposite), PI);
+
+        assert_relative_eq!(regular.dist(perp), 2f32.sqrt());
+        assert_relative_eq!(regular.angle(perp), PI / 2f32);
+    }
 }
