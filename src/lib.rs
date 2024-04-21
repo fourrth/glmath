@@ -99,6 +99,27 @@ macro_rules! GENERATE_VEC {
                         self
                     }
 
+                    /// Does inner product (aka dot product)
+                    #[inline(always)]
+                    pub fn mul_inner(self, other: Self) -> T {
+                        self.into_iter()
+                        .zip(other.into_iter())
+                        .map(|(ca, cb)| ca * cb)
+                        .sum()
+                    }
+
+                    /// Gets the length of the Vector
+                    #[inline(always)]
+                    pub fn len(self) -> T {
+                        self.mul_inner(self).sqrt()
+                    }
+
+                    /// Gets the norm of the Vector
+                    #[inline(always)]
+                    pub fn norm(self) -> Self {
+                        self.div_scalar(self.len())
+                    }
+
                 }// impl end
             }
         )*
@@ -121,6 +142,10 @@ GENERATE_VEC!(2, 3, 4);
 
 #[cfg(test)]
 mod tests {
+    use std::f32::consts::PI;
+
+    use approx::assert_relative_eq;
+
     use super::*;
     #[test]
     fn test_vectors_basic() {
@@ -160,4 +185,31 @@ mod tests {
         assert_eq!(v1, ans_div.mul_scalar(scalar));
         assert_eq!(ans_mul, v1.add(v1).add(v1).add(v1));
     }
+    #[test]
+    fn test_vectors_len_norm() {
+        let v1 = Vector2::from([3f32, 4f32]);
+        let v2 = Vector2::from([11f32, 60f32]);
+
+        assert_relative_eq!(v1.len(), 5f32);
+        assert_relative_eq!(v2.len(), 61f32);
+
+        assert_eq!(v1.norm(), Vector2::from([0.6f32, 0.8f32]));
+        assert_eq!(v2.norm(), Vector2::from([11f32 / 61f32, 60f32 / 61f32]));
+    }
+
+    #[test]
+    fn test_vectors_mul_inner() {
+        let theta = PI / 4f32;
+        let (y, x) = theta.sin_cos();
+        let v1 = Vector2::from([x, y]);
+        let v1_perp1 = Vector2::from([-y, x]);
+        let v1_perp2 = Vector2::from([y, -x]);
+
+        assert_relative_eq!(v1.mul_inner(v1_perp1), 0f32);
+        assert_relative_eq!(v1.mul_inner(v1_perp2), 0f32);
+
+        assert_relative_eq!(v1_perp1.norm().mul_inner(v1_perp2.norm()), -1f32);
+        assert_relative_eq!(v1.norm().mul_inner(v1.mul_scalar(5f32).norm()), 1f32);
+    }
+
 }
