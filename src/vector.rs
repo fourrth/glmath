@@ -158,7 +158,6 @@ macro_rules! GENERATE_VEC {
                         let b = self.len() * other.len();
                         num::clamp(a/b, -T::one(), T::one()).acos()
                     }
-
                     /// Does [`crate::scalar::lerp`] but on each element
                     /// of the Vector. Result is the linear interpolation
                     /// between the two Vectors
@@ -184,6 +183,43 @@ impl<T: Element> Vector3<T> {
             self[2] * crossed[0] - self[0] * crossed[2],
             self[0] * crossed[1] - self[1] * crossed[0],
         ])
+    }
+}
+
+impl<T: Element> Vector2<T> {
+    /// Gets the perpendicular Vector
+    /// See example for difference to [`crate::vector::Vector2::perp2`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use glmath::vector::Vector2;
+    /// let v1 = Vector2::from([1f32,2f32]);
+    /// let p2 = v1.perp1();
+    ///
+    /// assert_eq!(p2, Vector2::from([-2f32,1f32]));
+    /// assert_eq!(v1.mul_inner(p2), 0f32);
+    /// ```
+    #[inline(always)]
+    pub fn perp1(self) -> Self {
+        Self([-self[1], self[0]])
+    }
+    /// Gets the perpendicular Vector
+    /// See example for difference to [`crate::vector::Vector2::perp1`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use glmath::vector::Vector2;
+    /// let v1 = Vector2::from([1f32,2f32]);
+    /// let p2 = v1.perp2();
+    ///
+    /// assert_eq!(p2, Vector2::from([2f32,-1f32]));
+    /// assert_eq!(v1.mul_inner(p2), 0f32);
+    /// ```
+    #[inline(always)]
+    pub fn perp2(self) -> Self {
+        Self([self[1], -self[0]])
     }
 }
 
