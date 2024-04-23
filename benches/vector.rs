@@ -82,7 +82,7 @@ pub fn standard_vector2(c: &mut Criterion) {
 }
 
 pub fn standard_vector3(c: &mut Criterion) {
-    let input_vector_pair = generate_input_data_vector3_pair(500);
+    let input_vector_pair = generate_input_data_vector3_pair(600);
     let input_vector_single = generate_input_data_vector3(200);
     let input_vector_scalar_pair = VectorScalarPair(
         generate_input_data_vector3(200),
@@ -140,6 +140,16 @@ pub fn standard_vector3(c: &mut Criterion) {
             for cx in 400..500 {
                 let (ca,cb) = myinput[cx];
                 black_box(ca.angle(black_box(cb)));
+            }
+        }
+    }
+
+    Bench_with_input! {
+        c,"mul_cross","random float [0,1)",&input_vector_pair,myinput
+        {
+            for cx in 500..600 {
+                let (ca,cb) = myinput[cx];
+                black_box(ca.mul_cross(black_box(cb)));
             }
         }
     }

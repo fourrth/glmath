@@ -176,6 +176,25 @@ macro_rules! GENERATE_VEC {
 
 impl<T: Element> Vector3<T> {
     /// Does cross product
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use glmath::vector::Vector3;
+    /// let i_hat = Vector3::from([1f32, 0f32, 0f32]);
+    /// let j_hat = Vector3::from([0f32, 1f32, 0f32]);
+    /// let k_hat = Vector3::from([0f32, 0f32, 1f32]);
+    ///
+    /// let origin: Vector3<f32> = Vector3::from([0f32, 0f32, 0f32]);
+    ///
+    /// assert_eq!(i_hat.mul_cross(j_hat), k_hat);
+    /// assert_eq!(k_hat.mul_cross(i_hat), j_hat);
+    /// assert_eq!(j_hat.mul_cross(k_hat), i_hat);
+    ///
+    /// assert_eq!(k_hat.mul_cross(j_hat), i_hat.mul_scalar(-1f32));
+    ///
+    /// assert_eq!(i_hat.mul_cross(i_hat), origin);
+    /// ```
     #[inline(always)]
     pub fn mul_cross(self, crossed: Self) -> Self {
         Self([
@@ -185,7 +204,7 @@ impl<T: Element> Vector3<T> {
         ])
     }
 }
-
+// cargo doc --no-deps -p glmath
 impl<T: Element> Vector2<T> {
     /// Gets the perpendicular Vector
     /// See example for difference to [`crate::vector::Vector2::perp2`]
