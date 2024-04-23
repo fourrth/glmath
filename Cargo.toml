@@ -39,3 +39,8 @@ required-features = ["random_vectors"]
 name = "vector_random"
 harness = false
 required-features = ["random_vectors"]
+
+[[bench]]
+name = "scalar"
+harness = false
+required-features = ["random_vectors"]
