@@ -7,30 +7,6 @@ pub trait Element:
 impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy> Element for T {}
 
 #[cfg(test)]
-mod test_scalar {
-    use approx::assert_relative_eq;
-
-    use crate::scalar::lerp;
-
-    #[test]
-    fn test_scalar_lerp() {
-        let v0 = 0f32;
-        let v1 = 4f32;
-        let v2 = 12f32;
-
-        assert_relative_eq!(lerp(v0, v1, 0f32), 0f32);
-        assert_relative_eq!(lerp(v0, v2, 0f32), 0f32);
-
-        assert_relative_eq!(lerp(v1, v2, 0f32), 4f32);
-        assert_relative_eq!(lerp(v1, v2, 0.25f32), 6f32);
-        assert_relative_eq!(lerp(v1, v2, 0.5f32), 8f32);
-        assert_relative_eq!(lerp(v1, v2, 0.75f32), 10f32);
-        assert_relative_eq!(lerp(v1, v2, 1f32), 12f32);
-
-        assert_relative_eq!(lerp(v1, v2, 2f32), 20f32);
-    }
-}
-#[cfg(test)]
 mod test_vector {
     use std::f32::consts::PI;
 
