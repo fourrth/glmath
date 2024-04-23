@@ -55,6 +55,10 @@ pub fn standard_vector3(c: &mut Criterion) {
         generate_input_data_vector3(200),
         generate_input_data_scalar(200),
     );
+    let input_vector_pair_scalar = (
+        generate_input_data_vector3_pair(100),
+        generate_input_data_scalar(100),
+    );
 
     // input_vector_pair
     Bench_with_input! {
@@ -145,6 +149,17 @@ pub fn standard_vector3(c: &mut Criterion) {
             for cx in 100..200 {
                 let ca = myinput[cx];
                 black_box(ca.norm());
+            }
+        }
+    }
+
+    // input_vector_pair_scalar
+    Bench_with_input! {
+        c,"norm","random float [0,1)",&input_vector_pair_scalar,myinput
+        {
+            for cx in 0..100 {
+                let ((ca,cb),cd) = (myinput.0[cx],myinput.1[cx]);
+                black_box(ca.lerp(black_box(cb), black_box(cd)));
             }
         }
     }

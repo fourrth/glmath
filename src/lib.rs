@@ -122,4 +122,14 @@ mod test_vector {
         assert_relative_eq!(regular.dist(perp), 2f32.sqrt());
         assert_relative_eq!(regular.angle(perp), PI / 2f32);
     }
+
+    #[test]
+    fn test_vectors_lerp() {
+        let v1 = Vector2::from([1f32, 1f32]);
+        let v2 = Vector2::from([3f32, 3f32]);
+
+        assert_eq!(v1.lerp(v2, 0f32), v1);
+        assert_eq!(v1.lerp(v2, 1f32), v2);
+        assert_eq!(v1.lerp(v2, 0.5f32), Vector2::from([2f32, 2f32]));
+    }
 }

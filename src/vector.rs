@@ -1,3 +1,5 @@
+use crate::scalar::lerp;
+
 use super::Element;
 use core::ops::{Index, IndexMut};
 
@@ -12,7 +14,7 @@ macro_rules! GENERATE_VEC {
             // Generate the struct using paste
             paste::item! {
 
-                /// Generates a vector with random elements.
+                /// Generates a Vector with random elements.
                 /// Since T is a float, it will generate a value [0,1)
                 #[cfg(feature = "rand")]
                 #[inline(always)]
@@ -149,12 +151,23 @@ macro_rules! GENERATE_VEC {
                         other.sub(self).len()
                     }
 
-                    /// Gets the angle between two vectors
+                    /// Gets the angle between two Vectors
                     #[inline(always)]
                     pub fn angle(self, other: Self) -> T {
                         let a = self.mul_inner(other);
                         let b = self.len() * other.len();
                         num::clamp(a/b, -T::one(), T::one()).acos()
+                    }
+
+                    /// Does [`crate::scalar::lerp`] but on each element
+                    /// of the Vector. Result is the linear interpolation
+                    /// between the two Vectors
+                    #[inline(always)]
+                    pub fn lerp(mut self, other: Self, t: T) -> Self {
+                        for cx in 0..$n {
+                            self[cx] = lerp(self[cx], other[cx], t);
+                        }
+                        self
                     }
                 }// impl end
             }
