@@ -1,6 +1,7 @@
 use crate::vector::*;
 use crate::Element;
 use core::ops::{Index, IndexMut};
+use std::mem::MaybeUninit;
 
 macro_rules! GENERATE_MATRIX {
     ($($n:expr),*) => {
@@ -94,6 +95,17 @@ macro_rules! GENERATE_MATRIX {
                     #[inline(always)]
                     pub fn mul_scalar(self, scalar: T) -> Self {
                         Self(self.0.map(|ca| ca.mul_scalar(scalar)))
+                    }
+
+                    #[inline(always)]
+                    pub fn transpose(self) -> Self {
+                        let mut ret = unsafe { Self(MaybeUninit::<[[<Vector $n>]<T>; $n]>::uninit().assume_init()) };
+                        for cx in 0..$n {
+                            for cy in 0..$n {
+                                ret[cy][cx] = self[cx][cy];
+                            }
+                        }
+                        ret
                     }
                 }// impl end
             }
