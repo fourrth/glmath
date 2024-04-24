@@ -76,7 +76,7 @@ macro_rules! GENERATE_MATRIX {
 
                     /// Creates a new Matrix using uninitialized data
                     #[inline(always)]
-                    pub unsafe fn new_uninit() -> Self {
+                    pub fn new_uninit() -> Self {
                          Self(unsafe {MaybeUninit::<[[<Vector $n>]<T>; $n]>::uninit().assume_init()})
                     }
 
@@ -110,10 +110,35 @@ macro_rules! GENERATE_MATRIX {
                         Self(self.0.map(|ca| ca.mul_scalar(scalar)))
                     }
 
+                    /// Multiplies the Matrix and Vector together
+                    #[inline(always)]
+                    pub fn mul_vector(self, vector:[<Vector $n>]<T>) -> [<Vector $n>]<T> {
+                        let mut ret = [<Vector $n>]::new_uninit();
+                        for cx in 0..$n {
+                            ret[cx] = self[cx].mul_inner(vector);
+                        }
+                        ret
+                    }
+
+                    /// Multiplies two Matrix's together
+                    #[inline(always)]
+                    pub fn mul_matrix(self, other: Self) -> Self {
+                        let other_transpose = other.transpose();
+                        let mut data = unsafe { MaybeUninit::<[T; $n *$n]>::uninit().assume_init() };
+
+                        for cx in 0..$n {
+                            for cy in 0..$n {
+                                data[cx * $n + cy] = self[cx].mul_inner(other_transpose[cy]);
+                            }
+                        }
+
+                        Self::from(data)
+                    }
+
                     /// Gives the transpose of the Matrix
                     #[inline(always)]
                     pub fn transpose(self) -> Self {
-                        let mut ret = unsafe {Self::new_uninit()};
+                        let mut ret = Self::new_uninit();
                         for cx in 0..$n {
                             for cy in 0..$n {
                                 ret[cy][cx] = self[cx][cy];
@@ -130,21 +155,6 @@ macro_rules! GENERATE_MATRIX {
                             sum = sum + self[cx][cx]
                         }
                         sum
-                    }
-
-                    /// Multiplies two Matrix's together
-                    #[inline(always)]
-                    pub fn mul_matrix(self, other: Self) -> Self {
-                        let other_transpose = other.transpose();
-                        let mut data = unsafe { MaybeUninit::<[T; $n *$n]>::uninit().assume_init() };
-
-                        for cx in 0..$n {
-                            for cy in 0..$n {
-                                data[cx * $n + cy] = self[cx].mul_inner(other_transpose[cy]);
-                            }
-                        }
-
-                        Self::from(data)
                     }
 
                     /// Does mul_matrix but power times

@@ -92,7 +92,7 @@ macro_rules! GENERATE_VEC {
 
                 impl<T: Element> [<Vector $n>]<T> {
                     #[inline(always)]
-                    pub unsafe fn new_uninit() -> Self {
+                    pub fn new_uninit() -> Self {
                          Self(unsafe {MaybeUninit::<[T;$n]>::uninit().assume_init()})
                     }
 

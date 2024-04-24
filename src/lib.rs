@@ -14,7 +14,7 @@ mod test_matrix {
 
     use crate::{
         matrix::{Matrix2x2, Matrix3x3, Matrix4x4},
-        vector::Vector3,
+        vector::{Vector3, Vector4},
     };
 
     #[test]
@@ -112,6 +112,19 @@ mod test_matrix {
             m1.transpose(),
             Matrix3x3::from([-1f32, 4f32, 7f32, 2f32, 5f32, 8f32, 3f32, 6f32, 9f32,])
         )
+    }
+
+    #[test]
+    fn test_matrix_mul_vector() {
+        let m1 = Matrix4x4::from([
+            1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32, 10f32, 11f32, 12f32, 13f32,
+            14f32, 15f32, 16f32,
+        ]);
+        let v1 = Vector4::from([5f32, 6f32, 7f32, 8f32]);
+        assert_eq!(
+            m1.mul_vector(v1),
+            Vector4::from([70f32, 174f32, 278f32, 382f32])
+        );
     }
 
     #[test]
