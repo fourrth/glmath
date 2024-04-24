@@ -85,6 +85,16 @@ macro_rules! GENERATE_MATRIX {
                         }
                         self
                     }
+
+                    #[inline(always)]
+                    pub fn div_scalar(self, scalar: T) -> Self {
+                        Self(self.0.map(|ca| ca.div_scalar(scalar)))
+                    }
+
+                    #[inline(always)]
+                    pub fn mul_scalar(self, scalar: T) -> Self {
+                        Self(self.0.map(|ca| ca.mul_scalar(scalar)))
+                    }
                 }// impl end
             }
         )*

@@ -31,6 +31,23 @@ mod test_matrix {
             Matrix3x3::from([-8f32, -6f32, -4f32, -2f32, 0f32, 2f32, 4f32, 6f32, 8f32])
         );
     }
+
+    #[test]
+    fn test_matrix_mul_div_scalar() {
+        let data1 = [1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32];
+        let m1 = Matrix3x3::from(data1);
+        let scalar = 0.5f32;
+        assert_eq!(
+            m1.mul_scalar(scalar),
+            Matrix3x3::from(data1.map(|ca| ca / 2f32))
+        );
+        assert_eq!(
+            m1.div_scalar(scalar),
+            Matrix3x3::from(data1.map(|ca| ca * 2f32))
+        );
+        assert_eq!(m1.mul_scalar(scalar).div_scalar(scalar), m1);
+        assert_eq!(m1.div_scalar(scalar).mul_scalar(scalar), m1);
+    }
 }
 #[cfg(test)]
 mod test_vector {
