@@ -264,6 +264,27 @@ impl<T: Element> Matrix4x4<T> {
                     - self[1][1] * (self[2][0] * self[3][2] - self[2][2] * self[3][0])
                     + self[1][2] * (self[2][0] * self[3][1] - self[2][1] * self[3][0]))
     }
+
+    #[inline(always)]
+    pub fn inverse(self) -> Self {
+        // using the Carley-Hamilton
+        let tr = self.trace();
+
+        let self_pow2 = self.mul_matrix(self);
+        let tr_2 = self_pow2.trace();
+
+        let self_pow3 = self_pow2.mul_matrix(self);
+        let two = T::one() + T::one();
+        let three = two + T::one();
+        let six = two * three;
+
+        Self::default()
+            .mul_scalar(((tr.powi(3)) - (three * tr * tr_2) + (two * self_pow3.trace())) / six)
+            .sub(self.mul_scalar((T::one() / two) * ((tr.powi(2)) - (tr_2))))
+            .add(self_pow2.mul_scalar(tr))
+            .sub(self_pow3)
+            .div_scalar(self.det())
+    }
 }
 
 GENERATE_MATRIX!(2, 3, 4);

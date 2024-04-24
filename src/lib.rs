@@ -78,6 +78,11 @@ mod test_matrix {
     fn test_matrix_inverse() {
         let m2x2 = Matrix2x2::from([1f32, 2f32, 3f32, 4f32]);
         let m3x3 = Matrix3x3::from([1f32, 2f32, 0f32, 4f32, 5f32, 6f32, 0f32, 1f32, 9f32]);
+        let m4x4 = Matrix4x4::from([
+            1f32, 2f32, 3f32, 4f32, -1f32, 5f32, 9f32, 0f32, 0f32, 1f32, 2f32, 3f32, 4f32, 5f32,
+            6f32, 9f32,
+        ]);
+
         assert_eq!(
             m2x2.inverse(),
             Matrix2x2::from([-2f32, 1f32, 1.5f32, -0.5f32])
@@ -96,6 +101,13 @@ mod test_matrix {
                 1f32 / 11f32,
             ])
         );
+        assert_eq!(
+            m4x4.inverse(),
+            Matrix4x4::from([
+                13.5f32, -0.5f32, -8.25f32, -3.25f32, -27f32, 1f32, 15f32, 7f32, 16.5f32, -0.5f32,
+                -9.25f32, -4.25f32, -2f32, 0f32, 1.5f32, 0.5f32,
+            ])
+        )
     }
 
     #[test]
