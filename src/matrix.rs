@@ -15,6 +15,7 @@ macro_rules! GENERATE_MATRIX {
                 pub struct [<Matrix $n x $n>]<T:Element>(pub [[<Vector $n>]<T>; $n]);
 
                 impl<T: Element> From<[[<Vector $n>]<T>; $n]> for [<Matrix $n x $n>]<T> {
+                    #[inline(always)]
                     fn from(value: [[<Vector $n>]<T>; $n]) -> Self {
                         Self(value)
                     }
@@ -123,6 +124,35 @@ macro_rules! GENERATE_MATRIX {
                         }
                         sum
                     }
+
+                    #[inline(always)]
+                    pub fn mul_matrix(self, other: Self) -> Self {
+                        let other_transpose = other.transpose();
+                        let mut data = unsafe { MaybeUninit::<[T; $n *$n]>::uninit().assume_init() };
+
+                        for cx in 0..$n {
+                            for cy in 0..$n {
+                                data[cx * $n + cy] = self[cx].mul_inner(other_transpose[cy]);
+                            }
+                        }
+
+                        Self::from(data)
+                    }
+
+                    #[inline(always)]
+                    pub fn powi(self,power:usize) -> Self {
+                        use std::hint::black_box;
+                        if power == 0 {
+                            return Self::default();
+                        }
+                        let mut ret = self;
+                        for _ in 0..power-1 {
+                            ret = black_box(self.mul_matrix(ret));
+                            black_box(ret);
+                        }
+                        black_box(ret)
+                    }
+
                 }// impl end
             }
         )*

@@ -106,6 +106,32 @@ mod test_matrix {
             Matrix3x3::from([-1f32, 4f32, 7f32, 2f32, 5f32, 8f32, 3f32, 6f32, 9f32,])
         )
     }
+
+    #[test]
+    fn test_matrix_mul_matrix_powi() {
+        let m1 = Matrix3x3::from([1f64, 2f64, 3f64, 4f64, 5f64, 6f64, 7f64, 8f64, 9f64]);
+        let m2 = Matrix3x3::from([9f64, -5f64, 1f64, 0f64, 3f64, 88f64, -77f64, 0f64, -1f64]);
+        let ans_pow10 = Matrix3x3::from([
+            132476037840f64,
+            162775103256f64,
+            193074168672f64,
+            300005963406f64,
+            368621393481f64,
+            437236823556f64,
+            467535888972f64,
+            574467683706f64,
+            681399478440f64,
+        ]);
+        assert_eq!(
+            m1.mul_matrix(m2),
+            Matrix3x3::from([
+                -222f64, 1f64, 174f64, -426f64, -5f64, 438f64, -630f64, -11f64, 702f64
+            ])
+        );
+        assert_eq!(m1.powi(0), Matrix3x3::default());
+        assert_eq!(m1.powi(1), m1);
+        assert_eq!(m1.powi(10), ans_pow10);
+    }
 }
 #[cfg(test)]
 mod test_vector {
