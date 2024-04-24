@@ -10,7 +10,7 @@ macro_rules! GENERATE_MATRIX {
             // Generate the struct using paste
             paste::item! {
 
-                #[repr(C)]
+                #[repr(transparent)]
                 #[derive(Debug, Clone, Copy)]
                 pub struct [<Matrix $n x $n>]<T:Element>(pub [[<Vector $n>]<T>; $n]);
 
@@ -219,6 +219,34 @@ impl<T: Element> Matrix2x2<T> {
 
     /// Inverts the Matrix, but first checks
     /// to see if `self.det() == 0`
+    ///
+    /// # Examples
+    /// ```
+    /// use glmath::vector::Vector2;
+    /// use glmath::matrix::Matrix2x2;
+    ///
+    /// // Let's solve the following system:
+    /// // 2x + y = 15,
+    /// // 3x - y =  5
+    ///
+    /// // Setup the Matrix and Vector
+    /// let coefficient_m = Matrix2x2::from([2f32,1f32,
+    ///                                      3f32,-1f32]
+    /// );
+    /// let const_v = Vector2::from([15f32,5f32]);
+    ///
+    /// // Compute the inverse
+    /// // Note that if the system has no solution,
+    /// // the determinant of the matrix would be 0 and
+    /// // the inverse call would return None
+    /// let inverse = coefficient_m.inverse().unwrap();
+    ///
+    /// // (4f32,7f32)
+    /// let ans = inverse.mul_vector(const_v);
+    ///
+    /// // Now let's check our answer
+    /// assert_eq!(coefficient_m.mul_vector(ans),const_v);
+    /// ```
     #[inline(always)]
     pub fn inverse(self) -> Option<Self> {
         let det = self.det();
@@ -282,6 +310,36 @@ impl<T: Element> Matrix3x3<T> {
 
     /// Inverts the Matrix, but first checks
     /// to see if `self.det() == 0`
+    ///
+    /// # Examples
+    /// ```
+    /// use glmath::vector::Vector3;
+    /// use glmath::matrix::Matrix3x3;
+    ///
+    /// // Let's solve the following system:
+    /// //  x +  y +  z =  2,
+    /// // 6x - 4y + 5z = 31,
+    /// // 5x + 2y + 2z = 13
+    ///
+    /// // Setup the Matrix and Vector
+    /// let coefficient_m = Matrix3x3::from([1f32, 1f32, 1f32,
+    ///                                      6f32,-4f32, 5f32,
+    ///                                      5f32, 2f32, 2f32]
+    /// );
+    /// let const_v = Vector3::from([2f32,31f32,13f32]);
+    ///
+    /// // Compute the inverse
+    /// // Note that if the system has no solution,
+    /// // the determinant of the matrix would be 0 and
+    /// // the inverse call would return None
+    /// let inverse = coefficient_m.inverse().unwrap();
+    ///
+    /// // (3f32,-2f32,1f32)
+    /// let ans = inverse.mul_vector(const_v);
+    ///
+    /// // Now let's check our answer
+    /// assert_eq!(coefficient_m.mul_vector(ans),const_v);
+    /// ```
     #[inline(always)]
     pub fn inverse(self) -> Option<Self> {
         let det = self.det();
@@ -372,6 +430,38 @@ impl<T: Element> Matrix4x4<T> {
 
     /// Inverts the Matrix, but first checks
     /// to see if `self.det() == 0`
+    ///
+    /// # Examples
+    /// ```
+    /// use glmath::vector::Vector4;
+    /// use glmath::matrix::Matrix4x4;
+    ///
+    /// // Let's solve the following system:
+    /// // 5x +  4y - 2z + 6  w = 4   ,
+    /// // 3x +  6y + 6z + 4.5w = 13.5,
+    /// // 6x + 12y - 2z + 16 w = 20  ,
+    /// // 4x -  2y + 2z -  4 w = 6
+    ///
+    /// // Setup the Matrix and Vector
+    /// let coefficient_m = Matrix4x4::from([5f64,  4f64, -2f64,  6f64,
+    ///                                      3f64,  6f64,  6f64,  4.5f64,
+    ///                                      6f64, 12f64, -2f64, 16f64,
+    ///                                      4f64, -2f64,  2f64, -4f64]
+    /// );
+    /// let const_v = Vector4::from([4f64,13.5f64,20f64,6f64]);
+    ///
+    /// // Compute the inverse
+    /// // Note that if the system has no solution,
+    /// // the determinant of the matrix would be 0 and
+    /// // the inverse call would return None
+    /// let inverse = coefficient_m.inverse().unwrap();
+    ///
+    /// // (-2f64/3f64, 95f64/3f64, -34f64/3f64, -71f64/3f64))
+    /// let ans = inverse.mul_vector(const_v);
+    ///
+    /// // Now let's check our answer
+    /// assert!(coefficient_m.mul_vector(ans).eq_fast(const_v,1e-6f64));
+    /// ```
     #[inline(always)]
     pub fn inverse(self) -> Option<Self> {
         let det = self.det();

@@ -160,7 +160,6 @@ mod test_vector {
     use approx::assert_relative_eq;
 
     use super::vector::*;
-    // use super::*;
     #[test]
     fn test_vectors_basic() {
         let data_2f = [1.0, 2.0];

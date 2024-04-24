@@ -35,7 +35,7 @@ macro_rules! GENERATE_VEC {
                     )
                 }
 
-                #[repr(C)]
+                #[repr(transparent)]
                 #[derive(Debug, Clone, Copy)]
                 pub struct [<Vector $n>]<T:Element>(pub [T; $n]);
 
@@ -79,14 +79,7 @@ macro_rules! GENERATE_VEC {
 
                 impl<T: Element> PartialEq for [<Vector $n>]<T> {
                     fn eq(&self, other: &Self) -> bool {
-                        for (ca, cb) in self.into_iter().zip(other.into_iter()) {
-                            if (ca - cb).abs() > T::epsilon() // faster to just check one but idc
-                            || (cb - ca).abs() > T::epsilon()
-                            {
-                                return false;
-                            }
-                        }
-                        true
+                        self.eq_fast(*other,T::epsilon())
                     }
                 }
 
@@ -166,6 +159,7 @@ macro_rules! GENERATE_VEC {
                         let b = self.len() * other.len();
                         num::clamp(a/b, -T::one(), T::one()).acos()
                     }
+
                     /// Does [`crate::scalar::lerp`] but on each element
                     /// of the Vector. Result is the linear interpolation
                     /// between the two Vectors
@@ -175,6 +169,19 @@ macro_rules! GENERATE_VEC {
                             self[cx] = lerp(self[cx], other[cx], t);
                         }
                         self
+                    }
+
+                    /// Does by-value comparison to see if two Vector's are equal
+                    /// by using the given epsilon value
+                    #[inline(always)]
+                    pub fn eq_fast(self, other: Self, epsilon:T) -> bool {
+
+                        for (ca,cb) in self.into_iter().zip(other.into_iter()) {
+                            if (ca-cb).abs() > epsilon {
+                                return false;
+                            }
+                        }
+                        true
                     }
                 }// impl end
             }
