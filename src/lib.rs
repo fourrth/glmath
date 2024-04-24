@@ -67,6 +67,15 @@ mod test_matrix {
         assert_relative_eq!(m3x3.det(), 6f32);
         assert_relative_eq!(m4x4.det(), -376f32);
     }
+    #[test]
+    fn test_matrix_inverse() {
+        let m2x2 = Matrix2x2::from([1f32, 2f32, 3f32, 4f32]);
+
+        assert_eq!(
+            m2x2.inverse(),
+            Matrix2x2::from([-2f32, 1f32, 1.5f32, -0.5f32])
+        );
+    }
 
     #[test]
     fn test_matrix_transpose() {

@@ -118,6 +118,12 @@ impl<T: Element> Matrix2x2<T> {
     pub fn det(self) -> T {
         self[0][0] * self[1][1] - self[0][1] * self[1][0]
     }
+
+    #[inline(always)]
+    pub fn inverse(self) -> Self {
+        Self::from([self[1][1], -self[0][1], -self[1][0], self[0][0]])
+            .mul_scalar(T::one() / self.det())
+    }
 }
 
 impl<T: Element> Matrix3x3<T> {
