@@ -133,6 +133,21 @@ impl<T: Element> Matrix3x3<T> {
             - self[0][1] * (self[1][0] * self[2][2] - self[1][2] * self[2][0])
             + self[0][2] * (self[1][0] * self[2][1] - self[1][1] * self[2][0])
     }
+    #[inline(always)]
+    pub fn inverse(self) -> Self {
+        Matrix3x3::from([
+            self[1][1] * self[2][2] - self[1][2] * self[2][1],
+            -(self[0][1] * self[2][2] - self[0][2] * self[2][1]),
+            self[0][1] * self[1][2] - self[0][2] * self[1][1],
+            -(self[1][0] * self[2][2] - self[1][2] * self[2][0]),
+            self[0][0] * self[2][2] - self[0][2] * self[0][2] * self[2][0],
+            -(self[0][0] * self[1][2] - self[0][2] * self[1][0]),
+            self[1][0] * self[2][1] - self[1][1] * self[2][0],
+            -(self[0][0] * self[2][1] - self[0][1] * self[2][0]),
+            (self[0][0] * self[1][1] - self[0][1] * self[1][0]),
+        ])
+        .mul_scalar(T::one() / self.det())
+    }
 }
 
 impl<T: Element> Matrix4x4<T> {

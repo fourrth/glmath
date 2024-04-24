@@ -70,10 +70,24 @@ mod test_matrix {
     #[test]
     fn test_matrix_inverse() {
         let m2x2 = Matrix2x2::from([1f32, 2f32, 3f32, 4f32]);
-
+        let m3x3 = Matrix3x3::from([1f32, 2f32, 0f32, 4f32, 5f32, 6f32, 0f32, 1f32, 9f32]);
         assert_eq!(
             m2x2.inverse(),
             Matrix2x2::from([-2f32, 1f32, 1.5f32, -0.5f32])
+        );
+        assert_eq!(
+            m3x3.inverse(),
+            Matrix3x3::from([
+                -13f32 / 11f32,
+                6f32 / 11f32,
+                -4f32 / 11f32,
+                12f32 / 11f32,
+                -3f32 / 11f32,
+                2f32 / 11f32,
+                -4f32 / 33f32,
+                1f32 / 33f32,
+                1f32 / 11f32,
+            ])
         );
     }
 
