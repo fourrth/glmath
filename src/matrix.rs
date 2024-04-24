@@ -129,6 +129,54 @@ macro_rules! GENERATE_MATRIX {
     };
 }
 
+impl<T: Element> Default for Matrix2x2<T> {
+    #[inline(always)]
+    fn default() -> Self {
+        Self::from([T::one(), T::zero(), T::zero(), T::one()])
+    }
+}
+
+impl<T: Element> Default for Matrix3x3<T> {
+    #[inline(always)]
+    fn default() -> Self {
+        Self::from([
+            T::one(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::one(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::one(),
+        ])
+    }
+}
+
+impl<T: Element> Default for Matrix4x4<T> {
+    #[inline(always)]
+    fn default() -> Self {
+        Self::from([
+            T::one(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::one(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::one(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::zero(),
+            T::one(),
+        ])
+    }
+}
+
 impl<T: Element> Matrix2x2<T> {
     #[inline(always)]
     pub fn det(self) -> T {
