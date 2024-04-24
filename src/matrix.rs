@@ -153,6 +153,20 @@ macro_rules! GENERATE_MATRIX {
                         black_box(ret)
                     }
 
+                    #[inline(always)]
+                    pub fn inverse(self) -> Option<Self> {
+                        let det = self.det();
+                        if det == T::zero() {
+                            None
+                        } else {
+                            Some(self.inverse_inner(det))
+                        }
+                    }
+
+                    #[inline(always)]
+                    pub unsafe fn inverse_unchecked(self) -> Self {
+                        self.inverse_inner(self.det())
+                    }
                 }// impl end
             }
         )*
@@ -214,9 +228,8 @@ impl<T: Element> Matrix2x2<T> {
     }
 
     #[inline(always)]
-    pub fn inverse(self) -> Self {
-        Self::from([self[1][1], -self[0][1], -self[1][0], self[0][0]])
-            .mul_scalar(T::one() / self.det())
+    fn inverse_inner(self, det: T) -> Self {
+        Self::from([self[1][1], -self[0][1], -self[1][0], self[0][0]]).div_scalar(det)
     }
 }
 
@@ -228,7 +241,7 @@ impl<T: Element> Matrix3x3<T> {
             + self[0][2] * (self[1][0] * self[2][1] - self[1][1] * self[2][0])
     }
     #[inline(always)]
-    pub fn inverse(self) -> Self {
+    fn inverse_inner(self, det: T) -> Self {
         Matrix3x3::from([
             self[1][1] * self[2][2] - self[1][2] * self[2][1],
             -(self[0][1] * self[2][2] - self[0][2] * self[2][1]),
@@ -240,7 +253,7 @@ impl<T: Element> Matrix3x3<T> {
             -(self[0][0] * self[2][1] - self[0][1] * self[2][0]),
             (self[0][0] * self[1][1] - self[0][1] * self[1][0]),
         ])
-        .mul_scalar(T::one() / self.det())
+        .div_scalar(det)
     }
 }
 
@@ -266,7 +279,7 @@ impl<T: Element> Matrix4x4<T> {
     }
 
     #[inline(always)]
-    pub fn inverse(self) -> Self {
+    fn inverse_inner(self, det: T) -> Self {
         // using the Carley-Hamilton
         let tr = self.trace();
 
@@ -283,7 +296,7 @@ impl<T: Element> Matrix4x4<T> {
             .sub(self.mul_scalar((T::one() / two) * ((tr.powi(2)) - (tr_2))))
             .add(self_pow2.mul_scalar(tr))
             .sub(self_pow3)
-            .div_scalar(self.det())
+            .div_scalar(det)
     }
 }
 
