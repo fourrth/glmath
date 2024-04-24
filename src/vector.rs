@@ -1,10 +1,12 @@
 use crate::scalar::lerp;
 
 use super::Element;
-use core::ops::{Index, IndexMut};
 
 #[cfg(feature = "rand")]
 use once_cell::unsync::Lazy;
+
+use std::mem::MaybeUninit;
+use std::ops::{Index, IndexMut};
 #[cfg(feature = "rand")]
 static mut RNG_GEN: Lazy<rand::rngs::ThreadRng> = Lazy::new(|| rand::rngs::ThreadRng::default());
 
@@ -89,6 +91,11 @@ macro_rules! GENERATE_VEC {
                 }
 
                 impl<T: Element> [<Vector $n>]<T> {
+                    #[inline(always)]
+                    pub unsafe fn new_uninit() -> Self {
+                         Self(unsafe {MaybeUninit::<[T;$n]>::uninit().assume_init()})
+                    }
+
                     /// Does element-wise addition
                     #[inline(always)]
                     pub fn add(mut self, addend: Self) -> Self {
