@@ -70,8 +70,21 @@ macro_rules! GENERATE_MATRIX {
                 }
 
                 impl<T: Element> [<Matrix $n x $n>]<T> {
+                    #[inline(always)]
+                    pub fn add(mut self, addend: Self) -> Self {
+                        for cx in 0..$n {
+                            self[cx] = self[cx].add(addend[cx]);
+                        }
+                        self
+                    }
 
-
+                    #[inline(always)]
+                    pub fn sub(mut self, subtrahend: Self) -> Self {
+                        for cx in 0..$n {
+                            self[cx] = self[cx].sub(subtrahend[cx]);
+                        }
+                        self
+                    }
                 }// impl end
             }
         )*

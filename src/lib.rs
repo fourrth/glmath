@@ -20,6 +20,17 @@ mod test_matrix {
         let m2 = Matrix3x3::from([v2, v2.mul_scalar(4f32), v2]);
         assert_eq!(m2, m2);
     }
+
+    #[test]
+    fn test_matrix_add() {
+        let m1 = Matrix3x3::from([1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32]);
+        let m2 = Matrix3x3::from([9f32, 8f32, 7f32, 6f32, 5f32, 4f32, 3f32, 2f32, 1f32]);
+        assert_eq!(m1.add(m2), Matrix3x3::from([10f32; 9]));
+        assert_eq!(
+            m1.sub(m2),
+            Matrix3x3::from([-8f32, -6f32, -4f32, -2f32, 0f32, 2f32, 4f32, 6f32, 8f32])
+        );
+    }
 }
 #[cfg(test)]
 mod test_vector {
