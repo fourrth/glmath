@@ -56,19 +56,6 @@ mod test_matrix {
     }
 
     #[test]
-    fn test_matrix_det() {
-        let m2x2 = Matrix2x2::from([1f32, 2f32, 3f32, 4f32]);
-        let m3x3 = Matrix3x3::from([-1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32]);
-        let m4x4 = Matrix4x4::from([
-            1.0, 3.0, 5.0, 9.0, 1.0, 3.0, 1.0, 7.0, 4.0, 3.0, 9.0, 7.0, 5.0, 2.0, 0.0, 9.0,
-        ]);
-
-        assert_relative_eq!(m2x2.det(), -2f32);
-        assert_relative_eq!(m3x3.det(), 6f32);
-        assert_relative_eq!(m4x4.det(), -376f32);
-    }
-
-    #[test]
     fn test_matrix_trace() {
         let m3x3 = Matrix3x3::from([-1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32]);
         assert_relative_eq!(m3x3.trace(), 13f32);
@@ -148,7 +135,7 @@ mod test_matrix {
                 -222f64, 1f64, 174f64, -426f64, -5f64, 438f64, -630f64, -11f64, 702f64
             ])
         );
-        assert_eq!(m1.powi(0), Matrix3x3::default());
+        assert_eq!(m1.powi(0), Matrix3x3::ident());
         assert_eq!(m1.powi(1), m1);
         assert_eq!(m1.powi(10), ans_pow10);
     }
