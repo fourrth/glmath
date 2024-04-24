@@ -1,5 +1,7 @@
+pub mod matrix;
 pub mod scalar;
 pub mod vector;
+
 pub trait Element:
     core::fmt::Debug + std::iter::Sum + num::Float + PartialOrd + Clone + Copy
 {
@@ -7,13 +9,26 @@ pub trait Element:
 impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy> Element for T {}
 
 #[cfg(test)]
+mod test_matrix {
+    use crate::{matrix::Matrix3x3, vector::Vector3};
+
+    #[test]
+    fn test_matrix_basic() {
+        let _m1 = Matrix3x3::from([1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32]);
+
+        let v2 = Vector3::from([1f32, 2f32, 3f32]);
+        let m2 = Matrix3x3::from([v2, v2.mul_scalar(4f32), v2]);
+        assert_eq!(m2, m2);
+    }
+}
+#[cfg(test)]
 mod test_vector {
     use std::f32::consts::PI;
 
     use approx::assert_relative_eq;
 
     use super::vector::*;
-    use super::*;
+    // use super::*;
     #[test]
     fn test_vectors_basic() {
         let data_2f = [1.0, 2.0];

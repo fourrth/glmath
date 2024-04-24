@@ -33,6 +33,7 @@ macro_rules! GENERATE_VEC {
                     )
                 }
 
+                #[repr(C)]
                 #[derive(Debug, Clone, Copy)]
                 pub struct [<Vector $n>]<T:Element>(pub [T; $n]);
 
