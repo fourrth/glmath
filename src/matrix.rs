@@ -107,6 +107,15 @@ macro_rules! GENERATE_MATRIX {
                         }
                         ret
                     }
+
+                    #[inline(always)]
+                    pub fn trace(self) -> T {
+                        let mut sum = T::zero();
+                        for cx in 0..$n {
+                            sum = sum + self[cx][cx]
+                        }
+                        sum
+                    }
                 }// impl end
             }
         )*
