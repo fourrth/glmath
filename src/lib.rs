@@ -10,7 +10,12 @@ impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Co
 
 #[cfg(test)]
 mod test_matrix {
-    use crate::{matrix::Matrix3x3, vector::Vector3};
+    use approx::assert_relative_eq;
+
+    use crate::{
+        matrix::{Matrix2x2, Matrix3x3, Matrix4x4},
+        vector::Vector3,
+    };
 
     #[test]
     fn test_matrix_basic() {
@@ -19,6 +24,7 @@ mod test_matrix {
         let v2 = Vector3::from([1f32, 2f32, 3f32]);
         let m2 = Matrix3x3::from([v2, v2.mul_scalar(4f32), v2]);
         assert_eq!(m2, m2);
+        assert_eq!(m2[0][0], 1f32);
     }
 
     #[test]
@@ -47,6 +53,19 @@ mod test_matrix {
         );
         assert_eq!(m1.mul_scalar(scalar).div_scalar(scalar), m1);
         assert_eq!(m1.div_scalar(scalar).mul_scalar(scalar), m1);
+    }
+
+    #[test]
+    fn test_matrix_det() {
+        let m2x2 = Matrix2x2::from([1f32, 2f32, 3f32, 4f32]);
+        let m3x3 = Matrix3x3::from([-1f32, 2f32, 3f32, 4f32, 5f32, 6f32, 7f32, 8f32, 9f32]);
+        let m4x4 = Matrix4x4::from([
+            1.0, 3.0, 5.0, 9.0, 1.0, 3.0, 1.0, 7.0, 4.0, 3.0, 9.0, 7.0, 5.0, 2.0, 0.0, 9.0,
+        ]);
+
+        assert_relative_eq!(m2x2.det(), -2f32);
+        assert_relative_eq!(m3x3.det(), 6f32);
+        assert_relative_eq!(m4x4.det(), -376f32);
     }
 }
 #[cfg(test)]

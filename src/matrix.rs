@@ -101,4 +101,42 @@ macro_rules! GENERATE_MATRIX {
     };
 }
 
+impl<T: Element> Matrix2x2<T> {
+    #[inline(always)]
+    pub fn det(self) -> T {
+        self[0][0] * self[1][1] - self[0][1] * self[1][0]
+    }
+}
+
+impl<T: Element> Matrix3x3<T> {
+    #[inline(always)]
+    pub fn det(self) -> T {
+        self[0][0] * (self[1][1] * self[2][2] - self[1][2] * self[2][1])
+            - self[0][1] * (self[1][0] * self[2][2] - self[1][2] * self[2][0])
+            + self[0][2] * (self[1][0] * self[2][1] - self[1][1] * self[2][0])
+    }
+}
+
+impl<T: Element> Matrix4x4<T> {
+    #[inline(always)]
+    pub fn det(self) -> T {
+        self[0][0]
+            * (self[1][1] * (self[2][2] * self[3][3] - self[2][3] * self[3][2])
+                - self[1][2] * (self[2][1] * self[3][3] - self[2][3] * self[3][1])
+                + self[1][3] * (self[2][1] * self[3][2] - self[2][2] * self[3][1]))
+            - self[0][1]
+                * (self[1][0] * (self[2][2] * self[3][3] - self[2][3] * self[3][2])
+                    - self[1][2] * (self[2][0] * self[3][3] - self[2][3] * self[3][0])
+                    + self[1][3] * (self[2][0] * self[3][2] - self[2][2] * self[3][0]))
+            + self[0][2]
+                * (self[1][0] * (self[2][1] * self[3][3] - self[2][3] * self[3][1])
+                    - self[1][1] * (self[2][0] * self[3][3] - self[2][3] * self[3][0])
+                    + self[1][3] * (self[2][0] * self[3][1] - self[2][1] * self[3][0]))
+            - self[0][3]
+                * (self[1][0] * (self[2][1] * self[3][2] - self[2][2] * self[3][1])
+                    - self[1][1] * (self[2][0] * self[3][2] - self[2][2] * self[3][0])
+                    + self[1][2] * (self[2][0] * self[3][1] - self[2][1] * self[3][0]))
+    }
+}
+
 GENERATE_MATRIX!(2, 3, 4);
