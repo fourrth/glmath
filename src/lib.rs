@@ -170,7 +170,14 @@ mod test_vector {
         let _vec3f = Vector3::from(data_3f);
         let _vec4f = Vector4::from(data_4f);
 
+        let _vec4f_from_3 = Vector4::from((_vec3f, 4.));
+        let _vec4f_from_2_2s = Vector4::from((_vec2f, Vector2::from([3., 4.])));
+        let _vec3f_from_2 = Vector3::from((_vec2f, 3.));
+
         assert_eq!(_vec2f, _vec2f);
+        assert_eq!(_vec4f, _vec4f_from_3);
+        assert_eq!(_vec4f, _vec4f_from_2_2s);
+        assert_eq!(_vec3f_from_2, _vec3f);
     }
 
     #[test]

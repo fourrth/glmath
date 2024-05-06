@@ -189,6 +189,24 @@ macro_rules! GENERATE_VEC {
     };
 }
 
+impl<T: Element> From<(Vector3<T>, T)> for Vector4<T> {
+    fn from(value: (Vector3<T>, T)) -> Self {
+        Vector4::from(unsafe { *(&value as *const _ as *const [T; 4]) })
+    }
+}
+
+impl<T: Element> From<(Vector2<T>, Vector2<T>)> for Vector4<T> {
+    fn from(value: (Vector2<T>, Vector2<T>)) -> Self {
+        Vector4::from(unsafe { *(&value as *const _ as *const [T; 4]) })
+    }
+}
+
+impl<T: Element> From<(Vector2<T>, T)> for Vector3<T> {
+    fn from(value: (Vector2<T>, T)) -> Self {
+        Vector3::from(unsafe { *(&value as *const _ as *const [T; 3]) })
+    }
+}
+
 impl<T: Element> Vector3<T> {
     /// Does cross product
     ///
