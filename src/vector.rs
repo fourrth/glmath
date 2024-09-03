@@ -143,7 +143,7 @@ macro_rules! GENERATE_VEC {
                     /// Gets the norm of the Vector
                     #[inline(always)]
                     pub fn norm(self) -> Self {
-                        self.div_scalar(self.len())
+                        self.div_scalar(self.len() + T::epsilon())
                     }
 
                     /// Gets the distance between both Vectors
