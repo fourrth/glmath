@@ -208,6 +208,19 @@ impl<T: Element> From<(Vector2<T>, T)> for Vector3<T> {
 }
 
 impl<T: Element> Vector3<T> {
+    #[inline(always)]
+    /// Creates a Vector from spherical coordinates
+    /// theta is angle from top axis downwards
+    /// phi is the standard polar angle
+    /// magnitude is the scaling magnitude
+    //TODO: add more/examples to documentation
+    //TODO: also add polar for Vector2
+    pub fn from_spherical(theta: T, phi: T, magnitude: T) -> Self {
+        let (theta_sin, theta_cos) = theta.sin_cos();
+        let (phi_sin, phi_cos) = phi.sin_cos();
+
+        Self([theta_sin * phi_cos, theta_sin * phi_sin, theta_cos]).mul_scalar(magnitude)
+    }
     /// Does cross product
     ///
     /// # Examples
