@@ -189,6 +189,23 @@ macro_rules! GENERATE_VEC {
     };
 }
 
+// Probably should convert this all into a proc macro eventually
+impl<T: Element> From<(T, T)> for Vector2<T> {
+    fn from(value: (T, T)) -> Self {
+        Self(value.into())
+    }
+}
+impl<T: Element> From<(T, T, T)> for Vector3<T> {
+    fn from(value: (T, T, T)) -> Self {
+        Self(value.into())
+    }
+}
+impl<T: Element> From<(T, T, T, T)> for Vector4<T> {
+    fn from(value: (T, T, T, T)) -> Self {
+        Self(value.into())
+    }
+}
+
 impl<T: Element> From<(Vector3<T>, T)> for Vector4<T> {
     fn from(value: (Vector3<T>, T)) -> Self {
         Vector4::from(unsafe { *(&value as *const _ as *const [T; 4]) })
