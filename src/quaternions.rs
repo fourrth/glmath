@@ -79,7 +79,7 @@ impl<T: Element> Quaternion<T> {
     }
     /// Multiply two Quaternions
     #[inline(always)]
-    pub fn multiply(self, other: Self) -> Self {
+    pub fn mul(self, other: Self) -> Self {
         let (self_v3, self_w) = (Vector3::from([self[0], self[1], self[2]]), self[3]);
         let (other_v3, other_w) = (Vector3::from([other[0], other[1], other[2]]), other[3]);
         Quaternion::from((
@@ -88,5 +88,10 @@ impl<T: Element> Quaternion<T> {
                 .add(self_v3.mul_scalar(other_w).add(other_v3.mul_scalar(self_w))),
             self_w * other_w - self_v3.mul_inner(other_v3),
         ))
+    }
+    /// Conjugate the Quaternion
+    #[inline(always)]
+    pub fn conjugate(self) -> Self {
+        Self::from([-self[0], -self[1], -self[2], self[3]])
     }
 }
