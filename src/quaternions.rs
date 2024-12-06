@@ -1,3 +1,5 @@
+use std::ops::{Index, IndexMut};
+
 //TODO: Examples/Test for everything
 use crate::{vector::Vector4, Element};
 
@@ -10,6 +12,27 @@ impl<T: Element> From<Vector4<T>> for Quaternion<T> {
         Self(value)
     }
 }
+impl<T: Element> From<[T; 4]> for Quaternion<T> {
+    fn from(value: [T; 4]) -> Self {
+        Self(Vector4::from(value))
+    }
+}
+
+impl<T: Element> Index<usize> for Quaternion<T> {
+    type Output = T;
+    #[inline(always)]
+    fn index(&self, index: usize) -> &Self::Output {
+        self.0.index(index)
+    }
+}
+
+impl<T: Element> IndexMut<usize> for Quaternion<T> {
+    #[inline(always)]
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        self.0.index_mut(index)
+    }
+}
+
 impl<T: Element> Quaternion<T> {
     /// Does element-wise addition
     #[inline(always)]
@@ -40,5 +63,10 @@ impl<T: Element> Quaternion<T> {
     #[inline(always)]
     pub fn mul_inner(self, other: Self) -> T {
         self.0.mul_inner(other.0)
+    }
+    /// Gives the identity Quaternion
+    #[inline(always)]
+    pub fn identity() -> Self {
+        Quaternion::from([T::zero(), T::zero(), T::zero(), T::one()])
     }
 }
