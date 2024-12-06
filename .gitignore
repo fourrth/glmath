@@ -3,5 +3,8 @@
 !src
 !src/**
 
+!benches
+!benches/**
+
 !.gitignore
 !Cargo.toml
