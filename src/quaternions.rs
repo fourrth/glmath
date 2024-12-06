@@ -1,7 +1,10 @@
 use std::ops::{Index, IndexMut};
 
 //TODO: Examples/Test for everything
-use crate::{vector::Vector4, Element};
+use crate::{
+    vector::{Vector3, Vector4},
+    Element,
+};
 
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy)]
@@ -14,6 +17,11 @@ impl<T: Element> From<Vector4<T>> for Quaternion<T> {
 }
 impl<T: Element> From<[T; 4]> for Quaternion<T> {
     fn from(value: [T; 4]) -> Self {
+        Self(Vector4::from(value))
+    }
+}
+impl<T: Element> From<(Vector3<T>, T)> for Quaternion<T> {
+    fn from(value: (Vector3<T>, T)) -> Self {
         Self(Vector4::from(value))
     }
 }
