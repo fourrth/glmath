@@ -214,7 +214,6 @@ impl<T: Element> Vector3<T> {
     /// phi is the standard polar angle
     /// magnitude is the scaling magnitude
     //TODO: add more/examples to documentation
-    //TODO: also add polar for Vector2
     pub fn from_spherical(theta: T, phi: T, magnitude: T) -> Self {
         let (theta_sin, theta_cos) = theta.sin_cos();
         let (phi_sin, phi_cos) = phi.sin_cos();
@@ -250,8 +249,18 @@ impl<T: Element> Vector3<T> {
         ])
     }
 }
-// cargo doc --no-deps -p glmath
+
 impl<T: Element> Vector2<T> {
+    #[inline(always)]
+    /// Creates a Vector from polar coordinates
+    /// phi is the standard polar angle
+    /// magnitude is the scaling magnitude
+    //TODO: add more/examples to documentation
+    pub fn from_polar(phi: T, magnitude: T) -> Self {
+        let (phi_sin, phi_cos) = phi.sin_cos();
+
+        Self([phi_cos, phi_sin]).mul_scalar(magnitude)
+    }
     /// Gets the perpendicular Vector
     /// See example for difference to [`crate::vector::Vector2::perp2`]
     ///
