@@ -188,6 +188,22 @@ macro_rules! GENERATE_MATRIX {
     };
 }
 
+impl<T: Element> From<(Vector2<T>, Vector2<T>)> for Matrix2x2<T> {
+    fn from(value: (Vector2<T>, Vector2<T>)) -> Self {
+        Self(value.into())
+    }
+}
+impl<T: Element> From<(Vector3<T>, Vector3<T>, Vector3<T>)> for Matrix3x3<T> {
+    fn from(value: (Vector3<T>, Vector3<T>, Vector3<T>)) -> Self {
+        Self(value.into())
+    }
+}
+impl<T: Element> From<(Vector4<T>, Vector4<T>, Vector4<T>, Vector4<T>)> for Matrix4x4<T> {
+    fn from(value: (Vector4<T>, Vector4<T>, Vector4<T>, Vector4<T>)) -> Self {
+        Self(value.into())
+    }
+}
+
 impl<T: Element> Matrix2x2<T> {
     #[inline(always)]
     // Gives the Identity Matrix
