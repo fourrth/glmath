@@ -42,6 +42,12 @@ impl<T: Element> IndexMut<usize> for Quaternion<T> {
 }
 
 impl<T: Element> Quaternion<T> {
+    /// Separates the Quaternion into Vector and Scalar components.
+    /// Note that we define Quaternions to be (x,y,z,w)
+    #[inline(always)]
+    pub fn seperate(self) -> (Vector3<T>, T) {
+        (Vector3([self[0], self[1], self[2]]), self[3])
+    }
     /// Does element-wise addition
     #[inline(always)]
     pub fn add(self, addend: Self) -> Self {
@@ -80,8 +86,8 @@ impl<T: Element> Quaternion<T> {
     /// Multiply two Quaternions
     #[inline(always)]
     pub fn mul(self, other: Self) -> Self {
-        let (self_v3, self_w) = (Vector3::from([self[0], self[1], self[2]]), self[3]);
-        let (other_v3, other_w) = (Vector3::from([other[0], other[1], other[2]]), other[3]);
+        let (self_v3, self_w) = self.seperate();
+        let (other_v3, other_w) = other.seperate();
         Quaternion::from((
             self_v3
                 .mul_cross(other_v3)
