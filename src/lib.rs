@@ -1,4 +1,5 @@
 pub mod matrix;
+#[cfg(feature = "quaternions")]
 pub mod quaternions;
 pub mod scalar;
 pub mod vector;

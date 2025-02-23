@@ -1,3 +1,5 @@
+#![cfg(feature = "quaternions")]
+
 use std::ops::{Index, IndexMut};
 
 //TODO: Examples/Test for everything

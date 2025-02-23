@@ -26,6 +26,11 @@ For using features, simply edit `Cargo.toml` to:
 [dependencies]
 glmath = {version = "1.0", path = "path/to/cloned/crate", features = ["feature1, feature2"]}
 ```
+
+### quaternions
+
+On by default: adds quaternions type and functions
+
 ### random_vectors
 
 Adds some functions for which integrate well when you need randomly generated vectors and matrices 
