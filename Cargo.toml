@@ -13,7 +13,9 @@ once_cell = {version = "1.19.*",optional = true}
 
 
 [features]
+default = ["quaternions"]
 random_vectors = ["rand","once_cell"]
+quaternions = []
 
 
 [dev-dependencies]

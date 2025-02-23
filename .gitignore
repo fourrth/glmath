@@ -8,3 +8,7 @@
 
 !.gitignore
 !Cargo.toml
+
+!readme.md
+!LICENSE-MIT
+!LICENSE-APACHE
