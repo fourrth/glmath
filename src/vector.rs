@@ -35,6 +35,17 @@ macro_rules! GENERATE_VEC {
                     )
                 }
 
+                #[cfg(feature = "bytemuck")]
+                unsafe impl<T: Element> bytemuck::Pod for [<Vector $n>]<T> {}
+
+                #[cfg(feature = "bytemuck")]
+                unsafe impl<T: Element> bytemuck::Zeroable for [<Vector $n>]<T> {
+                    fn zeroed() -> Self {
+                        Self([T::zero();$n])
+                    }
+                }
+
+
                 #[repr(transparent)]
                 #[derive(Debug, Clone, Copy)]
                 pub struct [<Vector $n>]<T:Element>(pub [T; $n]);

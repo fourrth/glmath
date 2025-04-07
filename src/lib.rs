@@ -4,10 +4,23 @@ pub mod quaternions;
 pub mod scalar;
 pub mod vector;
 
+#[cfg(feature = "bytemuck")]
+pub trait Element:
+    core::fmt::Debug + std::iter::Sum + num::Float + PartialOrd + Clone + Copy + bytemuck::Pod
+{
+}
+#[cfg(feature = "bytemuck")]
+impl<
+        T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy + bytemuck::Pod,
+    > Element for T
+{
+}
+#[cfg(not(feature = "bytemuck"))]
 pub trait Element:
     core::fmt::Debug + std::iter::Sum + num::Float + PartialOrd + Clone + Copy
 {
 }
+#[cfg(not(feature = "bytemuck"))]
 impl<T: core::fmt::Debug + num::Float + PartialOrd + std::iter::Sum + Clone + Copy> Element for T {}
 
 #[cfg(test)]

@@ -11,7 +11,7 @@ macro_rules! GENERATE_MATRIX {
             paste::item! {
 
                 #[repr(transparent)]
-                #[derive(Debug, Clone, Copy)]
+                #[derive(Debug, Clone, Copy, PartialEq)]
                 pub struct [<Matrix $n x $n>]<T:Element>(pub [[<Vector $n>]<T>; $n]);
 
                 impl<T: Element> From<[[<Vector $n>]<T>; $n]> for [<Matrix $n x $n>]<T> {
@@ -45,6 +45,17 @@ macro_rules! GENERATE_MATRIX {
                     }
                 }
 
+
+                #[cfg(feature = "bytemuck")]
+                unsafe impl<T: Element> bytemuck::Pod for [<Matrix $n x $n>]<T> {}
+
+                #[cfg(feature = "bytemuck")]
+                unsafe impl<T: Element> bytemuck::Zeroable for [<Matrix $n x $n>]<T> {
+                    fn zeroed() -> Self {
+                        Self([[<Vector $n>]::zeroed(); $n])
+                    }
+                }
+
                 impl<T: Element> IndexMut<usize> for [<Matrix $n x $n>]<T> {
                     #[inline(always)]
                     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
@@ -58,17 +69,6 @@ macro_rules! GENERATE_MATRIX {
                     #[inline(always)]
                     fn into_iter(self) -> Self::IntoIter {
                         self.0.into_iter()
-                    }
-                }
-
-                impl<T: Element> PartialEq for [<Matrix $n x $n>]<T> {
-                    fn eq(&self, other: &Self) -> bool {
-                        for (v1, v2) in self.into_iter().zip(other.into_iter()) {
-                            if v1 != v2 {
-                                return false;
-                            }
-                        }
-                        true
                     }
                 }
 
