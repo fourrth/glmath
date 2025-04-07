@@ -10,17 +10,18 @@ paste = {version = "1.0.*"}
 num = {version = "0.4.*"}
 rand = {version = "0.8.*",optional = true}
 once_cell = {version = "1.19.*",optional = true}
-
+bytemuck = {version = "1.22.*",optional = true}
 
 [features]
 default = ["quaternions"]
-random_vectors = ["rand","once_cell"]
+random_vectors = ["rand","dep:once_cell"]
 quaternions = []
-
+bytemuck = ["dep:bytemuck"]
 
 [dev-dependencies]
 approx = {version = "0.5.*"}
 criterion = { version = "0.5.*"}
+rand ={ version = "0.8.*"}
 
 [profile.bench]
 opt-level = 2

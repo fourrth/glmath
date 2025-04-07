@@ -9,8 +9,18 @@ use crate::{
 };
 
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Quaternion<T: Element>(Vector4<T>);
+
+#[cfg(feature = "bytemuck")]
+unsafe impl<T: Element> bytemuck::Pod for Quaternion<T> {}
+
+#[cfg(feature = "bytemuck")]
+unsafe impl<T: Element> bytemuck::Zeroable for Quaternion<T> {
+    fn zeroed() -> Self {
+        Self(Vector4::zeroed())
+    }
+}
 
 impl<T: Element> From<Vector4<T>> for Quaternion<T> {
     fn from(value: Vector4<T>) -> Self {
