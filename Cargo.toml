@@ -14,7 +14,7 @@ bytemuck = {version = "1.22.*",optional = true}
 
 [features]
 default = ["quaternions"]
-random_vectors = ["rand","dep:once_cell"]
+random_vectors = ["dep:rand","dep:once_cell"]
 quaternions = []
 bytemuck = ["dep:bytemuck"]
 
