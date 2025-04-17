@@ -2,12 +2,12 @@ use crate::scalar::lerp;
 
 use super::Element;
 
-#[cfg(feature = "rand")]
+#[cfg(feature = "random_vectors")]
 use once_cell::unsync::Lazy;
 
 use std::mem::MaybeUninit;
 use std::ops::{Index, IndexMut};
-#[cfg(feature = "rand")]
+#[cfg(feature = "random_vectors")]
 static mut RNG_GEN: Lazy<rand::rngs::ThreadRng> = Lazy::new(|| rand::rngs::ThreadRng::default());
 
 macro_rules! GENERATE_VEC {
@@ -18,7 +18,7 @@ macro_rules! GENERATE_VEC {
 
                 /// Generates a Vector with random elements.
                 /// Since T is a float, it will generate a value [0,1)
-                #[cfg(feature = "rand")]
+                #[cfg(feature = "random_vectors")]
                 #[inline(always)]
                 pub fn [<generate_rand_vector $n>]<T>() -> [<Vector $n>]<T>
                 where
