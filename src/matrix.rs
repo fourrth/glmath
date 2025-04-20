@@ -12,6 +12,7 @@ macro_rules! GENERATE_MATRIX {
 
                 #[repr(transparent)]
                 #[derive(Debug, Clone, Copy, PartialEq)]
+                #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
                 pub struct [<Matrix $n x $n>]<T:Element>(pub [[<Vector $n>]<T>; $n]);
 
                 impl<T: Element> From<[[<Vector $n>]<T>; $n]> for [<Matrix $n x $n>]<T> {

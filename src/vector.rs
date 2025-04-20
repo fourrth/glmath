@@ -48,6 +48,7 @@ macro_rules! GENERATE_VEC {
 
                 #[repr(transparent)]
                 #[derive(Debug, Clone, Copy)]
+                #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
                 pub struct [<Vector $n>]<T:Element>(pub [T; $n]);
 
                 impl<T:Element> From<[T;$n]> for [<Vector $n>]<T> {
