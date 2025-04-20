@@ -11,12 +11,14 @@ num = {version = "0.4.*"}
 rand = {version = "0.8.*",optional = true}
 once_cell = {version = "1.19.*",optional = true}
 bytemuck = {version = "1.22.*",optional = true}
+serde = {version = "1.0.*",optional = true,features = ["derive"]}
 
 [features]
 default = ["quaternions"]
 random_vectors = ["dep:rand","dep:once_cell"]
 quaternions = []
 bytemuck = ["dep:bytemuck"]
+serde = ["dep:serde"]
 
 [dev-dependencies]
 approx = {version = "0.5.*"}
